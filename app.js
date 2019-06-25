@@ -1,10 +1,10 @@
-train-table
+// train-table
 
-train-name-input
-destination-input
-time-input
-frequency-input
-add-train-btn
+// train-name-input
+// destination-input
+// time-input
+// frequency-input
+// add-train-btn
 
 
 
@@ -31,8 +31,9 @@ var firebaseConfig = {
 
     var trainName = $("#train-name-input").val().trim();
     var trainDest = $("#destination-input").val().trim();
-    var trainTime = moment($("#time-input").val().trim(), "MM/DD/YYYY").format("X");
+    var trainTime = moment($("#time-input").val().trim(), "hhmm").format("HH:mm");
     var trainFreq = $("#frequency-input").val().trim();
+
 
     var newTrain = {
       name: trainName,
@@ -71,21 +72,46 @@ var firebaseConfig = {
   
 
     // var trainTimePretty = moment.unix(trainTime).format("MM/DD/YYYY");
+    
+
+    // var nextArrival = moment().diff(moment(empStart, "X"), "months");
+    // console.log(nextArrival);
+    // trainTime.text(moment(nextArrival).format("HH:mm"));
   
 
-    var nextArrival = moment().diff(moment(empStart, "X"), "months");
-    console.log(minsAway);
-  
+    // var minsAway = empMonths * empRate;
+    // console.log(minsAway);
 
-    var minsAway = empMonths * empRate;
-    console.log(empBilled);
+
+    var firstTimeConverted = moment(trainTime, "HH:mm").subtract(1, "years");
+    console.log(firstTimeConverted);
+
+    // Current Time
+    var currentTime = moment();
+    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+    // Difference between the times
+    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+    console.log("DIFFERENCE IN TIME: " + diffTime);
+
+    // Time apart (remainder)
+    var tRemainder = diffTime % trainFreq;
+    console.log(tRemainder);
+
+    // Minute Until Train
+    var minsAway = trainFreq - tRemainder;
+    console.log("MINUTES TILL TRAIN: " + minsAway);
+
+    // Next Train
+    var nextTrain = moment().add(minsAway, "minutes").format("hh:mm A");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm A"));
   
 
     var newRow = $("<tr>").append(
       $("<td>").text(trainName),
       $("<td>").text(trainDest),
       $("<td>").text(trainFreq),
-      $("<td>").text(nextArrival),
+      $("<td>").text(nextTrain),
       $("<td>").text(minsAway),
     );
 
